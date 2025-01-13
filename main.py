@@ -1,6 +1,8 @@
 import constants # suggested : from constants import * 
 import pygame
 from player import Player
+from asteroid import Asteroid
+from asteroidfield import AsteroidField
 
 
 
@@ -26,8 +28,14 @@ def main():
 
 
 
+    asteroids = pygame.sprite.Group() # arguably bloat, will see in the next steps
     updatable = pygame.sprite.Group()
     drawable = pygame.sprite.Group()
+
+    Player.containers = (updatable, drawable) # bloat
+    Asteroid.containers = (asteroids, updatable, drawable)
+    AsteroidField.containers = updatable
+    astroidField = AsteroidField()
     updatable.add(player)
     drawable.add(player)
     while True:
@@ -44,8 +52,18 @@ def main():
         for dwa in drawable:
             dwa.draw(screen)
 
+        for astroid in asteroids:
+            if (astroid.collides_with(player)):
+                print("game over!")
+                pygame.QUIT
+                return
+
+
         pygame.display.flip()
         dt = game_clock.tick(60) / 1000 # see https://www.pygame.org/docs/ref/time.html#pygame.time.Clock.tick
+
+
+
 
 
         
