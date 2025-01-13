@@ -26,14 +26,23 @@ def main():
 
 
 
+    updatable = pygame.sprite.Group()
+    drawable = pygame.sprite.Group()
+    updatable.add(player)
+    drawable.add(player)
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 return
 
+        # apply
+        for upd in updatable:
+            upd.update(dt)
+
+        # show 
         screen.fill("#000000")
-        player.update(dt)
-        player.draw(screen)
+        for dwa in drawable:
+            dwa.draw(screen)
 
         pygame.display.flip()
         dt = game_clock.tick(60) / 1000 # see https://www.pygame.org/docs/ref/time.html#pygame.time.Clock.tick
