@@ -1,11 +1,19 @@
 import pygame
 import constants
+from shot import Shot
 from circleshape import  CircleShape 
 
 class Player(CircleShape):
     def __init__(self, x,y):
         super().__init__(x,y,constants.PLAYER_RADIUS)
+        self.__x = x
+        self.__y = y
         self.rotation = 0
+
+    def shoot(self):
+        new_shot = Shot(x = self.__x, y = self.__y, radius = constants.PLAYER_SHOT_RADIUS)
+        new_shot.velocity = pygame.Vector2(0,1)
+        new_shot.rotation = self.rotation #player rotation indicated the direction of the shot
 
     def draw(self, screen):
         pygame.draw.polygon(surface = screen, color = "white", points = self.triangle(), width =  2)
@@ -34,6 +42,9 @@ class Player(CircleShape):
             # ?
         if keys[pygame.K_s]:
             self.move(-dt)
+            # ?
+        if keys[pygame.K_SPACE]:
+            self.shoot()
             # ?
     def move(self, dt):
         forward = pygame.Vector2(0, 1).rotate(self.rotation)
