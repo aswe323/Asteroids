@@ -6,14 +6,16 @@ from circleshape import  CircleShape
 class Player(CircleShape):
     def __init__(self, x,y):
         super().__init__(x,y,constants.PLAYER_RADIUS)
-        self.__x = x
-        self.__y = y
         self.rotation = 0
 
     def shoot(self):
-        new_shot = Shot(x = self.__x, y = self.__y, radius = constants.PLAYER_SHOT_RADIUS)
-        new_shot.velocity = pygame.Vector2(0,1)
-        new_shot.rotation = self.rotation #player rotation indicated the direction of the shot
+        new_shot = Shot(x = self.position.x, y = self.position.y)
+        new_shot.velocity = pygame.Vector2(0,1).rotate(self.rotation) #* constants.PLAYER_SHOT_SPEED
+        #this causes a funny bug so I kept it :D
+        # this applies the shot velocity to the player making it go really fast
+        # I name it the "ramming speed" bug 
+        #new_shot.rotation = self.rotation #player rotation indicated the direction of the shot
+        #new_shot.position = self.position
 
     def draw(self, screen):
         pygame.draw.polygon(surface = screen, color = "white", points = self.triangle(), width =  2)
@@ -44,8 +46,10 @@ class Player(CircleShape):
             self.move(-dt)
             # ?
         if keys[pygame.K_SPACE]:
+            #### this also updates the speed and velocity of the player for some reason Q_Q
             self.shoot()
             # ?
+
     def move(self, dt):
         forward = pygame.Vector2(0, 1).rotate(self.rotation)
         self.position += forward * constants.PLAYER_SPEED * dt

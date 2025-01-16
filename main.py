@@ -33,8 +33,9 @@ def main():
     asteroids = pygame.sprite.Group() # arguably bloat, will see in the next steps
     updatable = pygame.sprite.Group()
     drawable = pygame.sprite.Group()
+    Shot.containers = (shots,updatable, drawable)
 
-    Player.containers = (updatable, drawable) # bloat
+    Player.containers = (player, updatable, drawable) # bloat
     Asteroid.containers = (asteroids, updatable, drawable)
     AsteroidField.containers = updatable
     astroidField = AsteroidField()
@@ -53,6 +54,8 @@ def main():
         screen.fill("#000000")
         for dwa in drawable:
             dwa.draw(screen)
+            print(dwa)
+            print(dwa.velocity)
 
         for astroid in asteroids:
             if (astroid.collides_with(player)):
