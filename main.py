@@ -29,16 +29,18 @@ def main():
 
 
 
-    shots = pygame.sprite.Group()
-    asteroids = pygame.sprite.Group() # arguably bloat, will see in the next steps
     updatable = pygame.sprite.Group()
     drawable = pygame.sprite.Group()
-    Shot.containers = (shots,updatable, drawable)
+    asteroids = pygame.sprite.Group() 
+    shots = pygame.sprite.Group()
 
-    Player.containers = (player, updatable, drawable) # bloat
     Asteroid.containers = (asteroids, updatable, drawable)
+    Shot.containers = (shots,updatable, drawable)
     AsteroidField.containers = updatable
+
     astroidField = AsteroidField()
+    Player.containers = (updatable, drawable) 
+
     updatable.add(player)
     drawable.add(player)
     while True:
@@ -54,15 +56,17 @@ def main():
         screen.fill("#000000")
         for dwa in drawable:
             dwa.draw(screen)
-            print(dwa)
-            print(dwa.velocity)
 
         for astroid in asteroids:
             if (astroid.collides_with(player)):
                 print("game over!")
                 pygame.QUIT
                 return
-
+        for astroid in asteroids:
+            for shot in shots:
+                if astroid.collides_with(shot):
+                    shot.kill()
+                    astroid.split()
 
         pygame.display.flip()
         dt = game_clock.tick(60) / 1000 # see https://www.pygame.org/docs/ref/time.html#pygame.time.Clock.tick
